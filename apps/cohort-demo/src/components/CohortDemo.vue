@@ -11,6 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { request, gql } from 'graphql-request'
 
 export default defineComponent({
   name: 'CohortDemo',
@@ -23,23 +24,20 @@ export default defineComponent({
     }
   },
   async created () {
-    this.myData = await (await fetch('/CohortsCentral/catalogue/graphql',
-     {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        query: `{
-          Variables(limit: 10) {
-            name
-            description
-            label
-            unit{
-              name
-            }
-          }
-        }`
-      })
-    })).json()
+    const query = gql`
+    {
+      Variables(limit: 10) {
+        name
+        description
+        label
+        unit{
+          name
+        }
+      }
+    }
+    `
+    
+    this.myData = await request('/CohortsCentral/catalogue/graphql', query)
   }
 });
 </script>
