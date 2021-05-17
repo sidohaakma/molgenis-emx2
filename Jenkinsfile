@@ -48,7 +48,6 @@ podTemplate(inheritFrom: 'shared', containers: [
             stash includes: 'cli2.json', name: 'rancher-config'
         }
         container('java') {
-            checkout scm
             sh "apt update"
             sh "apt -y install git"
             sh "apt -y install docker.io"
@@ -64,9 +63,10 @@ podTemplate(inheritFrom: 'shared', containers: [
             changeRequest()
         }
         container('java') {
-          sh "./gradlew test jacocoMergedReport sonarqube shadowJar jib release \
-            -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=molgenis -Dsonar.host.url=https://sonarcloud.io \
-            -Dorg.ajoberstar.grgit.auth.username=${GITHUB_TOKEN} -Dorg.ajoberstar.grgit.auth.password"
+            checkout scm
+            sh "./gradlew test jacocoMergedReport sonarqube shadowJar jib release \
+                -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=molgenis -Dsonar.host.url=https://sonarcloud.io \
+                -Dorg.ajoberstar.grgit.auth.username=${GITHUB_TOKEN} -Dorg.ajoberstar.grgit.auth.password"
         }
     }
     stage('Build, Test') {
@@ -74,9 +74,10 @@ podTemplate(inheritFrom: 'shared', containers: [
             branch 'master'
         }
         container('java') {
+            checkout scm
             sh "./gradlew test jacocoMergedReport sonarqube shadowJar jib release \
-            -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=molgenis -Dsonar.host.url=https://sonarcloud.io \
-            -Dorg.ajoberstar.grgit.auth.username=${GITHUB_TOKEN} -Dorg.ajoberstar.grgit.auth.password"
+                -Dsonar.login=${SONAR_TOKEN} -Dsonar.organization=molgenis -Dsonar.host.url=https://sonarcloud.io \
+                -Dorg.ajoberstar.grgit.auth.username=${GITHUB_TOKEN} -Dorg.ajoberstar.grgit.auth.password"
         }
         container('rancher') {
             sh "rancher context switch dev-molgenis"
