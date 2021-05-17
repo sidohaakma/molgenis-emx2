@@ -48,6 +48,7 @@ podTemplate(inheritFrom: 'shared', containers: [
             stash includes: 'cli2.json', name: 'rancher-config'
         }
         container('java') {
+            checkout scm
             sh "apt update"
             sh "apt -y install git"
             sh "apt -y install docker.io"
