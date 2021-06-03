@@ -9,7 +9,7 @@
         class="fa fa-caret-up mr-2 hover-rotate-clockwize"
       ></i>
       <i v-else class="fa fa-caret-down mr-2"></i>
-      {{ variable.label }}
+      {{ variable.label }} - {{ variable.release.resource.acronym }}
     </span>
 
     <p class="mt-3" v-if="showDetail">

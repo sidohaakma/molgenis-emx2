@@ -84,11 +84,11 @@ export default {
     dispatch("fetchVariables", state.variables.length);
   },
 
-  fetchVariableDetails: async ({ commit, getters }, variableName) => {
-    if (getters.variableDetails[variableName]) {
+  fetchVariableDetails: async ({ commit, getters }, variable) => {
+    // if (getters.variableDetails[variable]) {
       // cache hit
-      return getters.variableDetails[variableName];
-    }
+      // return getters.variableDetails[variable.name];
+    // }
     // else fetch
     const query = gql`
       query Variables($filter: VariablesFilter) {
@@ -111,15 +111,15 @@ export default {
     const variables = {
       filter: {
         name: {
-          equals: [`${variableName}`],
+          equals: [`${variable.name}`],
         },
         release: {
           equals: [
             {
               resource: {
-                acronym: "LifeCycle",
+                acronym: variable.release.resource.acronym,
               },
-              version: "1.0.0",
+              version: variable.release.version,
             },
           ],
         },
@@ -158,11 +158,11 @@ export default {
             {
               release: {
                 resource: {
-                  acronym: "LifeCycle",
+                  acronym: variable.release.resource.acronym,
                 },
-                version: "1.0.0",
+                version: variable.release.version,
               },
-              name: variableName,
+              name: variable.name,
             },
           ],
         },
@@ -184,11 +184,6 @@ export default {
       {}
     );
     variableDetails.mappings = mappingsByAcronym;
-
-    commit("setVariableDetails", {
-      variableName,
-      variableDetails,
-    });
 
     return variableDetails;
   },
@@ -260,9 +255,9 @@ export default {
       return {
         release: {
           resource: {
-            acronym: "LifeCycle",
+            acronym: v.release.resource.acronym,
           },
-          version: "1.0.0",
+          version: v.release.version,
         },
         name: v.name,
       };
@@ -281,9 +276,9 @@ export default {
   },
 
   fetchMappingDetails: async ({ commit, getters }, { name, acronym }) => {
-    if (!getters.variableDetails[name]) {
-      return undefined;
-    }
+    // if (!getters.variableDetails[name]) {
+    //   return undefined;
+    // }
     const query = gql`
       query VariableMappings($filter: VariableMappingsFilter) {
         VariableMappings(filter: $filter) {
