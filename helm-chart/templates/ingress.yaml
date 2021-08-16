@@ -13,20 +13,13 @@ metadata:
 spec:
   rules:
   {{- range .Values.ingress.hosts }}
-  - http:
+  - host: {{ .name }} 
+    http:
       paths:
         - path: {{ default "/" .path }}
           backend:
             serviceName: {{ $fullName }}
             servicePort: 8088
-  {{- end }}
-  {{- if .tls }}
-  tls:
-    - hosts:
-      {{- range .Values.ingress.hosts }}
-      - {{ .name }}
-      {{- end }}
-      secretName: {{ .Values.ingress.tlsSecret }}
   {{- end }}
 ---
 {{- end }}
