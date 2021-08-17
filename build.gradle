@@ -109,9 +109,10 @@ String getGitHash() {
 task releaseHelm() {
     nexusUser = System.getenv('NEXUS_USER')
     nexusPassword = System.getenv('NEXUS_PASSWORD')
+    def chart = new org.yaml.snakeyaml.Yaml().load(new File("helm-chart/Chart.yaml").newInputStream())
     exec {
       commandLine 'helm', 'package', 'helm-chart/', '-d', 'helm-chart/artifacts' 
-      commandLine 'curl', '-L', '--fail', '-u',"${nexusUser}:${nexusPassword}","https://registry.molgenis.org/repository/helm3",'--upload-file', 'helm-chart/artifacts/emx2-0.1.2.tgz'
+      commandLine 'curl', '-L', '--fail', '-u',"${nexusUser}:${nexusPassword}","https://registry.molgenis.org/repository/helm3",'--upload-file', "helm-chart/artifacts/emx2-${chart.version}.tgz"
     }
 }
 
