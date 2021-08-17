@@ -107,9 +107,11 @@ String getGitHash() {
 
 //gradle cleanTest test --no-build-cache
 task releaseHelm() {
+    nexusUser = System.getenv('NEXUS_USER')
+    nexusPassword = System.getenv('NEXUS_PASSWORD')
     exec {
       commandLine 'helm', 'package', 'helm-chart/', '-d', 'helm-chart/artifacts' 
-      commandLine 'curl', '-L', '--fail', '-u',"${NEXUS_USER}:${NEXUS_PWD}","https://registry.molgenis.org/repository/helm3",'--upload-file', 'helm-chart/artifacts/emx2-0.1.2.tgz'
+      commandLine 'curl', '-L', '--fail', '-u',"${nexusUser}:${nexusPassword}","https://registry.molgenis.org/repository/helm3",'--upload-file', 'helm-chart/artifacts/emx2-0.1.2.tgz'
     }
 }
 
